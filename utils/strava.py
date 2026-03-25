@@ -139,7 +139,7 @@ def fetch_activities(access_token: str, n: int = 100) -> pd.DataFrame:
     if df.empty:
         return df
 
-    df["date"]       = pd.to_datetime(df["start_date_local"])
+    df["date"]       = pd.to_datetime(df["start_date_local"]).dt.tz_localize(None)
     df["dist_km"]    = df["distance"] / 1000
     df["duration_s"] = df["moving_time"].astype(float)
     df["pace_s_km"]  = df["duration_s"] / df["dist_km"].replace(0, np.nan)

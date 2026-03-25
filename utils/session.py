@@ -9,6 +9,11 @@ def init_session():
     pass
 
 
+def now() -> pd.Timestamp:
+    """Always returns timezone-naive Timestamp (safe for comparison with Strava dates)."""
+    return pd.Timestamp.now().tz_localize(None)
+
+
 def secs_to_mmss(secs) -> str:
     if secs is None or (isinstance(secs, float) and np.isnan(secs)) or secs <= 0:
         return "—"
