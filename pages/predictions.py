@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from utils.strava import vdot_to_race_time, riegel_predict
-from utils.session import secs_to_mmss, secs_to_hhmmss
+from utils.session import secs_to_mmss, secs_to_hhmmss, now
 
 RACES = [
     ("1 mile",    1.60934),
@@ -34,7 +34,7 @@ def show():
         window = col2.selectbox("Okno czasowe", ["30 dni", "90 dni", "6 miesięcy", "Wszystko"])
         days_map = {"30 dni": 30, "90 dni": 90, "6 miesięcy": 180, "Wszystko": 9999}
         days = days_map[window]
-        cutoff = pd.Timestamp.now() - pd.Timedelta(days=days)
+        cutoff = now() - pd.Timedelta(days=days)
         recent = df[df["date"] >= cutoff].dropna(subset=["vdot"])
         if recent.empty:
             st.warning("Brak danych w wybranym oknie.")

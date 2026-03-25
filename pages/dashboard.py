@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from utils.session import secs_to_mmss, secs_to_hhmmss, compute_ctl_atl_tsb, form_label
+from utils.session import secs_to_mmss, secs_to_hhmmss, compute_ctl_atl_tsb, form_label, now
 import plotly.graph_objects as go
 
 
@@ -18,8 +18,8 @@ def show():
     hrrest = st.session_state.get("hrrest") or 50
 
     # ── Quick stats ──────────────────────────────────────────────────────────
-    last30 = df[df["date"] >= pd.Timestamp.now() - pd.Timedelta(days=30)]
-    last7  = df[df["date"] >= pd.Timestamp.now() - pd.Timedelta(days=7)]
+    last30 = df[df["date"] >= now() - pd.Timedelta(days=30)]
+    last7  = df[df["date"] >= now() - pd.Timedelta(days=7)]
 
     best_vdot = df["vdot"].dropna().max()
     cur_vdot  = df["vdot"].dropna().head(5).mean()  # rolling recent
@@ -47,7 +47,7 @@ def show():
         cc3.metric("Form (TSB)",     f"{current['TSB']:+.1f}")
         cc4.markdown(f"**Stan formy:**<br><span style='color:{color};font-size:1.1rem'>{label}</span>", unsafe_allow_html=True)
 
-        recent = ctl_df[ctl_df["date"] >= (pd.Timestamp.now() - pd.Timedelta(days=90)).date()]
+        recent = ctl_df[ctl_df["date"] >= (now() - pd.Timedelta(days=90)).date()]
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=recent["date"], y=recent["CTL"],  name="CTL Fitness",  line=dict(color="#47ffb0", width=2)))
         fig.add_trace(go.Scatter(x=recent["date"], y=recent["ATL"],  name="ATL Fatigue",  line=dict(color="#ff6b47", width=2)))
