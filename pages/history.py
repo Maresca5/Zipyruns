@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-from utils.session import secs_to_mmss, secs_to_hhmmss, compute_ctl_atl_tsb, form_label, now
+from utils.session import secs_to_mmss, secs_to_hhmmss, compute_ctl_atl_tsb, form_label
 from utils.strava import vdot_to_race_time
 
 RACES_KM = {"5 km": 5.0, "10 km": 10.0, "Półmaraton": 21.0975, "Maraton": 42.195}
@@ -203,7 +203,8 @@ def show():
 
             st.markdown("---")
             days_back = st.slider("Pokaż ostatnie (dni)", 30, 365, 120)
-            cutoff = (now() - pd.Timedelta(days=days_back)).date()
+            cutoff = pd.Timestamp.now().normalize() - pd.Timedelta(days=days_back)
+            ctl_df["date"] = pd.to_datetime(ctl_df["date"])
             ctl_recent = ctl_df[ctl_df["date"] >= cutoff]
 
             fig = go.Figure()
